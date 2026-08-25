@@ -41,7 +41,7 @@ resource "yandex_compute_instance" "vm_a" {
     nat            = true
     nat_ip_address = yandex_vpc_address.backend_a.external_ipv4_address[0].address
     security_group_ids = [
-      yandex_vpc_security_group.backend.id,
+      module.security.backend_security_group_id,
     ]
   }
 
@@ -87,7 +87,7 @@ resource "yandex_compute_instance" "vm_b" {
     nat            = true
     nat_ip_address = yandex_vpc_address.backend_b.external_ipv4_address[0].address
     security_group_ids = [
-      yandex_vpc_security_group.backend.id,
+      module.security.backend_security_group_id,
     ]
   }
 

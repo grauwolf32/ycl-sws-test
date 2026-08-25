@@ -65,7 +65,7 @@ resource "yandex_alb_virtual_host" "test" {
   authority      = [var.domain_name]
 
   route_options {
-    security_profile_id = yandex_sws_security_profile.test.id
+    security_profile_id = module.security.sws_security_profile_id
   }
 
   route {
@@ -89,7 +89,7 @@ resource "yandex_alb_load_balancer" "test" {
   name               = "alb-test"
   network_id         = yandex_vpc_network.default.id
   region_id          = "ru-central1"
-  security_group_ids = [yandex_vpc_security_group.alb.id]
+  security_group_ids = [module.security.alb_security_group_id]
 
   allocation_policy {
     location {

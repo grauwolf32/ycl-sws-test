@@ -17,13 +17,13 @@ Backend принимает HTTP только от `alb-sg`, а SSH — толь�
 
 ## Состав
 
-- `network.tf`: VPC, две подсети и управляемая default SG без ingress;
-- `security-groups.tf`: правила ALB и backend VM;
+- `network.tf`: VPC и две подсети;
+- `security.tf`: подключение локального модуля политик безопасности;
+- `modules/security/`: default/ALB/backend SG, WAF, SWS и лог-группа;
 - `public-access.tf`: три статических публичных IPv4;
 - `compute.tf`: две VM с auto-delete boot-дисками;
 - `alb.tf`: ALB и объекты маршрутизации;
 - `certificate.tf`: управляемый сертификат Certificate Manager;
-- `sws.tf`: WAF, профиль безопасности и отдельная лог-группа;
 - `cloud-init/backend.yaml.tftpl`: пользователь, `sudo` и SSH-ключ;
 - `variables.tf` и `terraform.tfvars`: переносимые параметры;
 - `outputs.tf`: адрес ALB, адреса VM и SSH-команды.

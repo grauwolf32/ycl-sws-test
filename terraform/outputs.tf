@@ -45,9 +45,9 @@ output "ssh_commands" {
 output "sws" {
   description = "Smart Web Security resources and rollout mode."
   value = {
-    security_profile_id = yandex_sws_security_profile.test.id
-    waf_profile_id      = yandex_sws_waf_profile.test.id
-    log_group_id        = yandex_logging_group.sws.id
+    security_profile_id = module.security.sws_security_profile_id
+    waf_profile_id      = module.security.waf_profile_id
+    log_group_id        = module.security.log_group_id
     dry_run             = var.sws_dry_run
   }
 }
