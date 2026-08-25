@@ -1,0 +1,5 @@
+.build/
+.ansible/
+.keys/
+.venv/
+*.retry

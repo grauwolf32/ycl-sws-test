@@ -1,0 +1,42 @@
+[Unit]
+Description=Yandex SWS Test Lab origin
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ sws_lab_user }}
+Group={{ sws_lab_group }}
+EnvironmentFile={{ sws_lab_environment_file }}
+ExecStart={{ sws_lab_install_path }}
+Restart=on-failure
+RestartSec=2s
+TimeoutStopSec=15s
+KillSignal=SIGTERM
+
+# The service is non-root; this is the only capability needed for port 80.
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+# The application is a static binary with embedded assets and needs no writes.
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
+

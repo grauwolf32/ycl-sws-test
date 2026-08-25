@@ -1,0 +1,147 @@
+---
+- name: Discover backends and build sws-lab
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Check Terraform binary
+      ansible.builtin.stat:
+        path: "{{ terraform_binary }}"
+      register: terraform_binary_stat
+
+    - name: Require Terraform binary
+      ansible.builtin.assert:
+        that:
+          - terraform_binary_stat.stat.exists
+          - terraform_binary_stat.stat.executable
+        fail_msg: >-
+          Terraform binary {{ terraform_binary }} is unavailable. Set
+          TERRAFORM_BIN to an executable Terraform path.
+
+    - name: Read current Terraform outputs
+      ansible.builtin.command:
+        argv:
+          - "{{ terraform_binary }}"
+          - "-chdir={{ terraform_dir }}"
+          - output
+          - -json
+      register: terraform_output_raw
+      changed_when: false
+
+    - name: Parse Terraform outputs
+      ansible.builtin.set_fact:
+        terraform_outputs: "{{ terraform_output_raw.stdout | from_json }}"
+
+    - name: Require public backend and ALB addresses
+      ansible.builtin.assert:
+        that:
+          - terraform_outputs.vm_public_ips.value.a | length > 0
+          - terraform_outputs.vm_public_ips.value.b | length > 0
+          - terraform_outputs.alb_public_ip.value | length > 0
+        fail_msg: >-
+          Terraform outputs vm_public_ips/alb_public_ip must contain current
+          addresses. Run terraform apply or refresh-only first.
+
+    - name: Add current Terraform backends to the in-memory inventory
+      ansible.builtin.add_host:
+        name: "{{ item.name }}"
+        groups: sws_lab_backends
+        ansible_host: "{{ terraform_outputs.vm_public_ips.value[item.key] }}"
+        ansible_user: "{{ item.user }}"
+        ansible_ssh_private_key_file: "{{ sws_lab_ssh_private_key_file }}"
+        ansible_ssh_common_args: "{{ sws_lab_ssh_common_args }}"
+      loop:
+        - name: backend-a
+          key: a
+          user: grauwolf
+        - name: backend-b
+          key: b
+          user: grauwolf
+      loop_control:
+        label: "{{ item.name }} -> {{ terraform_outputs.vm_public_ips.value[item.key] }}"
+
+    - name: Create local build directory
+      ansible.builtin.file:
+        path: "{{ sws_lab_build_dir }}"
+        state: directory
+        mode: "0750"
+
+    - name: Run application tests before deployment
+      ansible.builtin.command:
+        argv:
+          - go
+          - test
+          - ./...
+        chdir: "{{ sws_lab_source_dir }}"
+      environment:
+        GOCACHE: "{{ sws_lab_build_dir }}/go-cache"
+      changed_when: false
+
+    - name: Build static linux/amd64 application binary
+      ansible.builtin.command:
+        argv:
+          - go
+          - build
+          - -buildvcs=false
+          - -trimpath
+          - -ldflags=-s -w
+          - -o
+          - "{{ sws_lab_local_binary }}"
+          - ./cmd/sws-lab
+        chdir: "{{ sws_lab_source_dir }}"
+      environment:
+        CGO_ENABLED: "0"
+        GOOS: "{{ sws_lab_goos }}"
+        GOARCH: "{{ sws_lab_goarch }}"
+        GOCACHE: "{{ sws_lab_build_dir }}/go-cache"
+      changed_when: true
+
+- name: Deploy sws-lab to backends one at a time
+  hosts: sws_lab_backends
+  gather_facts: false
+  become: true
+  serial: 1
+  any_errors_fatal: true
+  vars_files:
+    - vars/main.yml
+  handlers:
+    - name: Import deployment handlers
+      ansible.builtin.import_tasks: handlers/main.yml
+
+  pre_tasks:
+    - name: Wait for SSH connectivity
+      ansible.builtin.wait_for_connection:
+        timeout: 30
+
+    - name: Gather minimal host facts
+      ansible.builtin.setup:
+        gather_subset:
+          - min
+
+  tasks:
+    - name: Deploy application and verify local health
+      ansible.builtin.import_tasks: tasks/deploy.yml
+
+- name: Verify application through the public ALB listener
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Wait until ALB returns application health
+      ansible.builtin.uri:
+        url: "http://{{ hostvars.localhost.terraform_outputs.alb_public_ip.value }}/healthz"
+        method: GET
+        timeout: 5
+        status_code: 200
+        return_content: true
+      register: sws_lab_alb_health
+      until: sws_lab_alb_health.status == 200
+      retries: 30
+      delay: 2
+      changed_when: false
+      delegate_to: backend-a
+      when: sws_lab_verify_alb | bool

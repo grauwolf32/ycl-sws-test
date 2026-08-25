@@ -1,0 +1,9 @@
+.git
+.agents
+.codex
+.idea
+.vscode
+bin
+coverage.out
+*.log
+

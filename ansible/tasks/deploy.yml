@@ -1,0 +1,80 @@
+---
+- name: Verify supported backend architecture
+  ansible.builtin.assert:
+    that:
+      - ansible_service_mgr == "systemd"
+      - ansible_architecture in ["x86_64", "amd64"]
+    fail_msg: >-
+      sws-lab deployment requires systemd on linux/amd64; detected
+      {{ ansible_system }}/{{ ansible_architecture }} with {{ ansible_service_mgr }}.
+
+- name: Create application group
+  ansible.builtin.group:
+    name: "{{ sws_lab_group }}"
+    system: true
+
+- name: Create unprivileged application user
+  ansible.builtin.user:
+    name: "{{ sws_lab_user }}"
+    group: "{{ sws_lab_group }}"
+    system: true
+    create_home: false
+    home: /nonexistent
+    shell: /usr/sbin/nologin
+
+- name: Create application configuration directory
+  ansible.builtin.file:
+    path: "{{ sws_lab_config_dir }}"
+    state: directory
+    owner: root
+    group: "{{ sws_lab_group }}"
+    mode: "0750"
+
+- name: Install application binary
+  ansible.builtin.copy:
+    src: "{{ sws_lab_local_binary }}"
+    dest: "{{ sws_lab_install_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+  notify: Restart sws-lab
+
+- name: Render application environment
+  ansible.builtin.template:
+    src: sws-lab.env.j2
+    dest: "{{ sws_lab_environment_file }}"
+    owner: root
+    group: "{{ sws_lab_group }}"
+    mode: "0640"
+  notify: Restart sws-lab
+
+- name: Install hardened systemd unit
+  ansible.builtin.template:
+    src: sws-lab.service.j2
+    dest: "/etc/systemd/system/{{ sws_lab_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart sws-lab
+
+- name: Apply pending service changes
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure application service is enabled and running
+  ansible.builtin.systemd_service:
+    name: "{{ sws_lab_service_name }}"
+    enabled: true
+    state: started
+
+- name: Verify local application health
+  ansible.builtin.uri:
+    url: http://127.0.0.1:80/healthz
+    method: GET
+    status_code: 200
+    return_content: true
+  register: sws_lab_local_health
+  until: sws_lab_local_health.status == 200
+  retries: 15
+  delay: 2
+  changed_when: false
+

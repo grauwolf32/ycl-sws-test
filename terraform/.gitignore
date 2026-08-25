@@ -1,0 +1,26 @@
+.terraform/
+.tools/
+/imports.tf
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Generated during the discovery/import workflow.
+generated.imported.tf
+inventory/
+
+# Credentials must never be committed.
+.secrets/
+*.pem
+*.key
+
+# Local-only Terraform inputs and overrides.
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

@@ -1,0 +1,34 @@
+---
+terraform_dir: "{{ playbook_dir }}/../terraform"
+terraform_binary: >-
+  {{ lookup('ansible.builtin.env', 'TERRAFORM_BIN') |
+     default(terraform_dir ~ '/.tools/bin/terraform', true) }}
+
+sws_lab_source_dir: "{{ playbook_dir }}/../src"
+sws_lab_build_dir: "{{ playbook_dir }}/.build"
+sws_lab_local_binary: "{{ sws_lab_build_dir }}/sws-lab"
+sws_lab_goos: linux
+sws_lab_goarch: amd64
+
+sws_lab_service_name: sws-lab
+sws_lab_user: sws-lab
+sws_lab_group: sws-lab
+sws_lab_install_path: /usr/local/bin/sws-lab
+sws_lab_config_dir: /etc/sws-lab
+sws_lab_environment_file: /etc/sws-lab/sws-lab.env
+sws_lab_listen_address: ":80"
+sws_lab_app_name: Yandex SWS Test Lab
+sws_lab_max_body_bytes: 1048576
+sws_lab_max_delay_ms: 2000
+sws_lab_trust_proxy_headers: true
+
+# accept-new accepts a host key only on first contact and still rejects a
+# changed key. Override this variable if hosts are pre-populated in known_hosts.
+sws_lab_ssh_common_args: >-
+  -o StrictHostKeyChecking=accept-new
+  -o ServerAliveInterval=15
+  -o ServerAliveCountMax=3
+sws_lab_ssh_private_key_file: "{{ playbook_dir }}/.keys/ansible_ed25519"
+
+# End-to-end verification runs from backend A through the public HTTP listener.
+sws_lab_verify_alb: true

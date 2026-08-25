@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Безопасный origin-стенд для проверки Yandex Smart Web Security">
+  <title>{{.AppName}}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="На главную">
+      <span class="brand-mark">S</span>
+      <span>{{.AppName}}</span>
+    </a>
+    <nav aria-label="Разделы">
+      <a href="#checks">Проверки</a>
+      <a href="#traffic">Трафик</a>
+      <a href="#routes">Маршруты</a>
+    </nav>
+    <div id="origin-status" class="status-pill status-pending">
+      <span class="status-dot"></span>
+      <span>Проверяем origin</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow"><span>LAB</span> WAF + AntiBot</div>
+      <h1>Проверьте защиту на&nbsp;<em>контролируемом</em> трафике</h1>
+      <p class="hero-copy">
+        Стенд принимает подозрительные строки как обычный текст. Если запрос дошёл сюда,
+        ответ содержит <code>X-Lab-Response: origin</code>. Заблокированный на SWS запрос
+        в origin-статистику не попадёт.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#checks">Начать проверку</a>
+        <a class="button button-secondary" href="/api/inspect">Посмотреть запрос</a>
+      </div>
+      <div class="config-strip" aria-label="Настройки стенда">
+        <div><span>Лимит тела</span><strong>{{.MaxBodyBytes}} B</strong></div>
+        <div><span>Макс. задержка</span><strong>{{.MaxDelayMS}} ms</strong></div>
+        <div><span>Proxy headers</span><strong>{{if .TrustProxyHeaders}}trusted{{else}}untrusted{{end}}</strong></div>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Метрики origin">
+      <article>
+        <span>Запросов дошло</span>
+        <strong id="metric-total">—</strong>
+        <small>с момента запуска</small>
+      </article>
+      <article>
+        <span>Сейчас активно</span>
+        <strong id="metric-active">—</strong>
+        <small>на backend</small>
+      </article>
+      <article>
+        <span>Browser-like</span>
+        <strong id="metric-browser">—</strong>
+        <small>по User-Agent</small>
+      </article>
+      <article>
+        <span>HTTP clients</span>
+        <strong id="metric-client">—</strong>
+        <small>curl, wget и SDK</small>
+      </article>
+    </section>
+
+    <section id="checks" class="section-block">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">01 / WAF</span>
+          <h2>Тест тела запроса</h2>
+        </div>
+        <p>Выберите безопасный маркер или отправьте собственную строку. Backend ничего не выполняет и не сохраняет.</p>
+      </div>
+
+      <div class="workbench">
+        <form id="waf-form" class="test-card">
+          <label for="waf-payload">Поле <code>comment</code></label>
+          <textarea id="waf-payload" name="comment" rows="5" spellcheck="false">Обычный контрольный комментарий</textarea>
+          <div class="presets" aria-label="Тестовые маркеры">
+            <button type="button" data-payload="&lt;script&gt;alert('waf-test')&lt;/script&gt;">XSS marker</button>
+            <button type="button" data-payload="' OR '1'='1' --">SQLi marker</button>
+            <button type="button" data-payload="../../etc/passwd">Traversal</button>
+            <button type="button" data-payload="; id">Command marker</button>
+          </div>
+          <div class="form-row">
+            <label class="compact-field">Имя поля
+              <input id="waf-field" type="text" value="comment" maxlength="40">
+            </label>
+            <button class="button button-primary" type="submit">Отправить в origin</button>
+          </div>
+        </form>
+
+        <div class="response-card">
+          <div class="response-head">
+            <span>Результат</span>
+            <span id="waf-result-badge" class="mini-badge">ожидание</span>
+          </div>
+          <pre id="waf-result">Выберите маркер и отправьте запрос.</pre>
+          <p class="response-note">Ответ SWS может отличаться кодом, телом и отсутствием заголовка <code>X-Lab-Response</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="traffic" class="section-block">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">02 / ANTIBOT</span>
+          <h2>Профиль браузерного трафика</h2>
+        </div>
+        <p>Эта страница загружает HTML, CSS, JavaScript, favicon, каталог и одно событие beacon — в отличие от простого HTTP-клиента.</p>
+      </div>
+
+      <div class="traffic-grid">
+        <article class="panel">
+          <div class="panel-icon">◎</div>
+          <h3>Browser session</h3>
+          <p>Локальный идентификатор нужен только для последовательности запросов и не является авторизацией.</p>
+          <dl>
+            <div><dt>Session</dt><dd id="session-id">—</dd></div>
+            <div><dt>Beacon</dt><dd id="beacon-state">—</dd></div>
+            <div><dt>Catalog</dt><dd id="catalog-state">—</dd></div>
+          </dl>
+        </article>
+
+        <form id="login-form" class="panel">
+          <div class="panel-icon">↗</div>
+          <h3>Baseline login</h3>
+          <p>Детерминированная пара <code>demo/demo</code> имитирует штатный POST и выдаёт непривилегированную cookie.</p>
+          <label>Логин<input name="username" value="demo" autocomplete="username"></label>
+          <label>Пароль<input name="password" value="demo" type="password" autocomplete="current-password"></label>
+          <button class="button button-secondary" type="submit">Войти</button>
+          <output id="login-result">Не отправлено</output>
+        </form>
+
+        <article class="panel">
+          <div class="panel-icon">◷</div>
+          <h3>Медленный origin</h3>
+          <p>Маршрут помогает проверить timeout и поведение профиля при задержке backend.</p>
+          <label>Задержка, ms<input id="delay-ms" type="number" min="0" max="{{.MaxDelayMS}}" value="250"></label>
+          <button id="delay-button" class="button button-secondary" type="button">Выполнить</button>
+          <output id="delay-result">Не отправлено</output>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block inspect-block">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">03 / ROUTING</span>
+          <h2>Что видит backend</h2>
+        </div>
+        <button id="refresh-inspect" class="button button-secondary" type="button">Обновить</button>
+      </div>
+      <pre id="inspect-result">Загрузка…</pre>
+    </section>
+
+    <section id="routes" class="section-block">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">04 / MAP</span>
+          <h2>Карта маршрутов</h2>
+        </div>
+        <p>Разные URL удобно привязать к разным правилам профиля безопасности.</p>
+      </div>
+      <div class="route-table" role="table" aria-label="Маршруты стенда">
+        <div class="route-row route-header" role="row"><span>Метод</span><span>Путь</span><span>Назначение</span></div>
+        <div class="route-row" role="row"><code>GET</code><code>/api/echo?value=…</code><span>Query string</span></div>
+        <div class="route-row" role="row"><code>POST</code><code>/api/waf/form</code><span>Form payload</span></div>
+        <div class="route-row" role="row"><code>POST</code><code>/api/waf/json</code><span>JSON body</span></div>
+        <div class="route-row" role="row"><code>POST</code><code>/api/waf/upload</code><span>Multipart upload</span></div>
+        <div class="route-row" role="row"><code>GET</code><code>/api/waf/path/{value}</code><span>URI/path</span></div>
+        <div class="route-row" role="row"><code>GET</code><code>/api/catalog</code><span>Bot target</span></div>
+        <div class="route-row" role="row"><code>POST</code><code>/api/login</code><span>Credential flow</span></div>
+        <div class="route-row" role="row"><code>GET</code><code>/protected/admin</code><span>Path rule</span></div>
+        <div class="route-row" role="row"><code>GET</code><code>/api/status/{code}</code><span>Status simulation</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Origin test application</span>
+    <span class="footer-rule"></span>
+    <span>Только для согласованного тестового контура</span>
+  </footer>
+</body>
+</html>
+

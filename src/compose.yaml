@@ -1,0 +1,17 @@
+services:
+  sws-lab:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      APP_NAME: "Yandex SWS Test Lab"
+      TRUST_PROXY_HEADERS: "false"
+      MAX_BODY_BYTES: "1048576"
+      MAX_DELAY_MS: "2000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
