@@ -100,3 +100,8 @@ positive among 11 benign cases. The active profile was returned to OWASP after
 the comparison. In the post-restore background window, 84/84 non-test requests
 were allowed with score zero and no WAF match. Full methodology and artifacts are in
 [`YANDEX_RULESET_COMPARISON_2026-08-28.md`](YANDEX_RULESET_COMPARISON_2026-08-28.md).
+
+Подробный разбор проблем настройки — включая fail-open профиль Yandex Ruleset
+без групп, gRPC false positive, ошибки body-limit тестов и особенности
+корреляции логов — находится в
+[`SWS_SETUP_ISSUES_2026-08-28.md`](SWS_SETUP_ISSUES_2026-08-28.md).
