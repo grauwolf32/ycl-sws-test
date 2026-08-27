@@ -1,0 +1,309 @@
+{
+  "schema_version": "wafcheck-plan/v1",
+  "target": "https://sws.grauwolf32.tech",
+  "defaults": {
+    "headers": {
+      "Accept": "application/json",
+      "User-Agent": "wafcheck-ruleset-comparison/1"
+    },
+    "timeout": "15s",
+    "block_statuses": [403],
+    "origin_header": "X-Lab-Response",
+    "origin_header_value": "origin",
+    "max_response_bytes": 65536
+  },
+  "cases": [
+    {
+      "name": "benign-health",
+      "category": "benign",
+      "method": "GET",
+      "path": "/healthz",
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-readiness",
+      "category": "benign",
+      "method": "GET",
+      "path": "/readyz",
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-query",
+      "category": "benign",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "Обычный запрос: заказ 42, Москва"},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-repeated-query",
+      "category": "benign",
+      "method": "GET",
+      "path": "/api/inspect",
+      "query": {"tag": ["blue", "green", "summer-sale"]},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-html-like-text",
+      "category": "benign-edge",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "Documentation says: use <strong>bold</strong>."},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-sql-words",
+      "category": "benign-edge",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "Select a plan for union members and update the draft."},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-shell-like-text",
+      "category": "benign-edge",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "Release candidate; id is 42 and status is green."},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-form-apostrophe",
+      "category": "benign-edge",
+      "method": "POST",
+      "path": "/api/waf/form",
+      "body": {"form": {"company": "O'Reilly Media", "note": "King's Road, London"}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-json-code",
+      "category": "benign-edge",
+      "method": "POST",
+      "path": "/api/waf/json",
+      "body": {"json": {"language": "javascript", "snippet": "if (a < b) return true;"}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-login",
+      "category": "benign",
+      "method": "POST",
+      "path": "/api/login",
+      "body": {"json": {"username": "demo", "password": "demo"}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-multipart",
+      "category": "benign",
+      "method": "POST",
+      "path": "/api/waf/upload",
+      "body": {"multipart": {"fields": {"title": "quarterly report", "owner": "security-team"}}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-body-below-limit",
+      "category": "platform-policy",
+      "method": "POST",
+      "path": "/api/echo",
+      "body": {"generated": {"bytes": 7900, "pattern": "pad=ordinary", "content_type": "application/x-www-form-urlencoded"}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "benign-body-at-limit",
+      "category": "platform-policy",
+      "method": "POST",
+      "path": "/api/echo",
+      "body": {"generated": {"bytes": 8192, "pattern": "pad=ordinary", "content_type": "application/x-www-form-urlencoded"}},
+      "expect": {"decision": "allow", "statuses": [200], "require_headers": {"X-Lab-Response": "origin"}}
+    },
+    {
+      "name": "body-above-binary-kib",
+      "category": "platform-policy",
+      "method": "POST",
+      "path": "/api/echo",
+      "body": {"generated": {"bytes": 8193, "pattern": "pad=ordinary", "content_type": "application/x-www-form-urlencoded"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "xss-query-script",
+      "category": "xss",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "<script>alert('wafcheck')</script>"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "xss-form-svg",
+      "category": "xss",
+      "method": "POST",
+      "path": "/api/waf/form",
+      "body": {"form": {"comment": "<svg onload=alert('wafcheck')>"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "xss-json-img",
+      "category": "xss",
+      "method": "POST",
+      "path": "/api/waf/json",
+      "body": {"json": {"comment": "<img src=x onerror=alert('wafcheck')>"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "sqli-query-union",
+      "category": "sqli",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "' UNION SELECT password FROM users-- wafcheck"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "sqli-form-boolean",
+      "category": "sqli",
+      "method": "POST",
+      "path": "/api/waf/form",
+      "body": {"form": {"username": "admin' OR 1=1 -- wafcheck", "password": "x"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "sqli-json-time",
+      "category": "sqli",
+      "method": "POST",
+      "path": "/api/waf/json",
+      "body": {"json": {"id": "1' AND SLEEP(5)-- wafcheck"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "lfi-query-unix",
+      "category": "lfi",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "../../../../etc/passwd"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "lfi-path-encoded",
+      "category": "lfi",
+      "method": "GET",
+      "path": "/api/waf/path/..%2f..%2fetc%2fpasswd",
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "lfi-query-windows",
+      "category": "lfi",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "..\\..\\windows\\win.ini"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rfi-query-http",
+      "category": "rfi",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "http://192.0.2.1/wafcheck.txt?"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rfi-form-php-wrapper",
+      "category": "rfi",
+      "method": "POST",
+      "path": "/api/waf/form",
+      "body": {"form": {"template": "php://filter/convert.base64-encode/resource=index.php"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rce-query-subshell",
+      "category": "rce",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "$(id)"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rce-query-semicolon",
+      "category": "rce",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"value": "hello; id"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rce-form-pipe",
+      "category": "rce",
+      "method": "POST",
+      "path": "/api/waf/form",
+      "body": {"form": {"command": "cat /etc/passwd | id"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "rce-json-php",
+      "category": "rce",
+      "method": "POST",
+      "path": "/api/waf/json",
+      "body": {"json": {"template": "<?php system('id'); ?>"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "tool-sqlmap-user-agent",
+      "category": "tool",
+      "method": "GET",
+      "path": "/api/catalog",
+      "headers": {"User-Agent": "sqlmap/1.8 (wafcheck)"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "tool-nikto-user-agent",
+      "category": "tool",
+      "method": "GET",
+      "path": "/api/catalog",
+      "headers": {"User-Agent": "Nikto/2.5.0 (wafcheck)"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "tool-trace-method",
+      "category": "tool",
+      "method": "TRACE",
+      "path": "/api/echo",
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "cve-log4shell-header",
+      "category": "cve",
+      "method": "GET",
+      "path": "/api/inspect",
+      "headers": {"X-Api-Version": "${jndi:ldap://127.0.0.1/wafcheck}"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "cve-spring-classloader",
+      "category": "cve",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"class.module.classLoader.resources.context.parent.pipeline.first.suffix": ".jsp"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "cve-phpunit-path",
+      "category": "cve",
+      "method": "POST",
+      "path": "/api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php",
+      "body": {"raw": "<?php echo 'wafcheck'; ?>", "content_type": "application/x-httpd-php"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "cve-bitrix-redirect",
+      "category": "cve",
+      "method": "GET",
+      "path": "/api/echo",
+      "query": {"SEF_APPLICATION_CUR_PAGE_URL": "https://192.0.2.1/wafcheck"},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    },
+    {
+      "name": "composite-multi-family",
+      "category": "composite",
+      "method": "POST",
+      "path": "/api/waf/json",
+      "body": {"json": {"xss": "<script>alert(1)</script>", "sql": "' OR 1=1 --", "file": "../../etc/passwd", "cmd": "$(id)"}},
+      "expect": {"decision": "block", "statuses": [403], "absent_headers": ["X-Lab-Response"]}
+    }
+  ]
+}

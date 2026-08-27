@@ -1,0 +1,64 @@
+{
+  "schema_version": "swslog/v1",
+  "generated_at": "2026-08-27T22:56:18.134275235Z",
+  "input_records": 84,
+  "filters": {},
+  "summary": {
+    "selected_events": 84,
+    "distinct_requests": 84,
+    "active_evaluations": 84,
+    "dry_run_evaluations": 0,
+    "dry_run_would_deny": 0,
+    "allowed_with_waf_match": 0,
+    "denied_without_waf_match": 0,
+    "unclassified_events": 0,
+    "rule_matches": 0,
+    "max_waf_score": 0
+  },
+  "actions": [
+    {
+      "name": "ALLOW",
+      "count": 84
+    }
+  ],
+  "verdicts": [
+    {
+      "name": "ALLOW",
+      "count": 84
+    }
+  ],
+  "matched_rules": [
+    {
+      "name": "WAF:waf-api",
+      "count": 84
+    }
+  ],
+  "top_paths": [
+    {
+      "name": "GET /api/stats",
+      "count": 84
+    }
+  ],
+  "top_hosts": [
+    {
+      "name": "sws.grauwolf32.tech",
+      "count": 84
+    }
+  ],
+  "top_clients": [
+    {
+      "name": "85.202.232.0/24",
+      "count": 84
+    }
+  ],
+  "timeline": [
+    {
+      "hour": "2026-08-27T22:00:00Z",
+      "events": 84,
+      "denied": 0,
+      "captcha": 0,
+      "dry_run": 0,
+      "rule_matches": 0
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import (
 // Config contains the runtime settings for the lab server.
 type Config struct {
 	Addr              string
+	GRPCAddr          string
 	AppName           string
 	MaxBodyBytes      int64
 	MaxDelay          time.Duration
@@ -27,6 +28,7 @@ type Config struct {
 func DefaultConfig() Config {
 	return Config{
 		Addr:              ":8080",
+		GRPCAddr:          ":9090",
 		AppName:           "Yandex SWS Test Lab",
 		MaxBodyBytes:      1 << 20, // 1 MiB
 		MaxDelay:          2 * time.Second,
@@ -50,6 +52,12 @@ func LoadConfig() (Config, error) {
 			return Config{}, fmt.Errorf("PORT must be an integer between 1 and 65535")
 		}
 		cfg.Addr = ":" + port
+	}
+	if value := strings.TrimSpace(os.Getenv("GRPC_ADDR")); value != "" {
+		cfg.GRPCAddr = value
+	}
+	if cfg.GRPCAddr == cfg.Addr {
+		return Config{}, fmt.Errorf("GRPC_ADDR and ADDR must be different")
 	}
 
 	if value := strings.TrimSpace(os.Getenv("APP_NAME")); value != "" {

@@ -8,6 +8,11 @@ output "https_url" {
   value       = "https://${var.domain_name}"
 }
 
+output "grpc_target" {
+  description = "Public TLS target for native gRPC clients."
+  value       = "${var.domain_name}:443"
+}
+
 output "tls_certificate" {
   description = "Managed Certificate Manager certificate attached to the HTTPS listener."
   value = {
@@ -45,9 +50,12 @@ output "ssh_commands" {
 output "sws" {
   description = "Smart Web Security resources and rollout mode."
   value = {
-    security_profile_id = module.security.sws_security_profile_id
-    waf_profile_id      = module.security.waf_profile_id
-    log_group_id        = module.security.log_group_id
-    dry_run             = var.sws_dry_run
+    security_profile_id   = module.security.sws_security_profile_id
+    waf_profile_id        = module.security.waf_profile_id
+    owasp_waf_profile_id  = module.security.owasp_waf_profile_id
+    yandex_waf_profile_id = module.security.yandex_waf_profile_id
+    active_ruleset        = var.waf_active_ruleset
+    log_group_id          = module.security.log_group_id
+    dry_run               = var.sws_dry_run
   }
 }

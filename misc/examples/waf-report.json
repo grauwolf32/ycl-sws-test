@@ -1,0 +1,58 @@
+{
+  "schema_version": "wafcheck/v1",
+  "run_id": "demo",
+  "target": "https://app.example.test",
+  "started_at": "2026-08-28T10:00:00Z",
+  "finished_at": "2026-08-28T10:00:01Z",
+  "summary": {
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "errors": 0,
+    "decisions": {
+      "allow": 2,
+      "block": 1
+    }
+  },
+  "results": [
+    {
+      "name": "baseline",
+      "category": "baseline",
+      "request_id": "demo-01-baseline",
+      "started_at": "2026-08-28T10:00:00Z",
+      "duration_ms": 20,
+      "method": "GET",
+      "url": "https://app.example.test/search?value=ordinary",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true
+    },
+    {
+      "name": "xss",
+      "category": "xss",
+      "request_id": "demo-02-xss",
+      "started_at": "2026-08-28T10:00:00Z",
+      "duration_ms": 18,
+      "method": "GET",
+      "url": "https://app.example.test/search?value=wafcheck",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true
+    },
+    {
+      "name": "sqli-dry-run",
+      "category": "sqli",
+      "request_id": "demo-03-sqli",
+      "started_at": "2026-08-28T10:00:00Z",
+      "duration_ms": 16,
+      "method": "POST",
+      "url": "https://app.example.test/login",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "block",
+      "passed": false
+    }
+  ]
+}

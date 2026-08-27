@@ -1,0 +1,1110 @@
+{
+  "schema_version": "swslog/v1",
+  "generated_at": "2026-08-27T22:44:33.557338898Z",
+  "input_records": 37,
+  "filters": {
+    "request_id_prefix": "cmp-yars-20260828-final-"
+  },
+  "summary": {
+    "selected_events": 37,
+    "distinct_requests": 37,
+    "active_evaluations": 37,
+    "dry_run_evaluations": 0,
+    "dry_run_would_deny": 0,
+    "allowed_with_waf_match": 0,
+    "denied_without_waf_match": 1,
+    "unclassified_events": 0,
+    "rule_matches": 63,
+    "max_waf_score": 83
+  },
+  "actions": [
+    {
+      "name": "DENY",
+      "count": 19
+    },
+    {
+      "name": "ALLOW",
+      "count": 18
+    }
+  ],
+  "verdicts": [
+    {
+      "name": "DENY",
+      "count": 19
+    },
+    {
+      "name": "ALLOW",
+      "count": 18
+    }
+  ],
+  "matched_rules": [
+    {
+      "name": "WAF:waf-api",
+      "count": 35
+    },
+    {
+      "name": "WAF:waf-health",
+      "count": 1
+    },
+    {
+      "name": "WAF:waf-readiness",
+      "count": 1
+    }
+  ],
+  "top_waf_rules": [
+    {
+      "rule_id": "yars-v0.1.1-id8020220-attack-sqli",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-sqli",
+      "group": "yars-v0.1.1-attack-sqli",
+      "count": 5,
+      "total_score": 50,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8030200-attack-lfi",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-lfi",
+      "group": "yars-v0.1.1-attack-lfi",
+      "count": 4,
+      "total_score": 40,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8030202-attack-lfi",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-lfi",
+      "group": "yars-v0.1.1-attack-lfi",
+      "count": 4,
+      "total_score": 40,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8030207-attack-lfi",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-lfi",
+      "group": "yars-v0.1.1-attack-lfi",
+      "count": 4,
+      "total_score": 40,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010202-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 4,
+      "total_score": 20,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010215-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 4,
+      "total_score": 20,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010217-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 4,
+      "total_score": 20,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010225-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 4,
+      "total_score": 20,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010212-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 3,
+      "total_score": 30,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010203-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 2,
+      "total_score": 20,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8050200-attack-tool",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-tool",
+      "group": "yars-v0.1.1-attack-tool",
+      "count": 2,
+      "total_score": 20,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8010210-attack-xss",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-xss",
+      "group": "yars-v0.1.1-attack-xss",
+      "count": 2,
+      "total_score": 10,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8020206-attack-sqli",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-sqli",
+      "group": "yars-v0.1.1-attack-sqli",
+      "count": 2,
+      "total_score": 10,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8020227-attack-sqli",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-sqli",
+      "group": "yars-v0.1.1-attack-sqli",
+      "count": 2,
+      "total_score": 10,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8030216-attack-lfi",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-lfi",
+      "group": "yars-v0.1.1-attack-lfi",
+      "count": 2,
+      "total_score": 10,
+      "max_score": 5,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8020203-attack-sqli",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-sqli",
+      "group": "yars-v0.1.1-attack-sqli",
+      "count": 2,
+      "total_score": 6,
+      "max_score": 3,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8070006-attack-cve",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-cve",
+      "group": "yars-v0.1.1-attack-cve",
+      "count": 1,
+      "total_score": 10,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8070009-attack-cve",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-cve",
+      "group": "yars-v0.1.1-attack-cve",
+      "count": 1,
+      "total_score": 10,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8070031-attack-cve",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-cve",
+      "group": "yars-v0.1.1-attack-cve",
+      "count": 1,
+      "total_score": 10,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    },
+    {
+      "rule_id": "yars-v0.1.1-id8080202-attack-rce",
+      "rule_set_id": "YARS_0_1_1",
+      "rule_group_id": "yars-v0.1.1-attack-rce",
+      "group": "yars-v0.1.1-attack-rce",
+      "count": 1,
+      "total_score": 10,
+      "max_score": 10,
+      "blocking_count": 0,
+      "dry_run_count": 0
+    }
+  ],
+  "top_paths": [
+    {
+      "name": "GET /api/echo",
+      "count": 13
+    },
+    {
+      "name": "POST /api/waf/form",
+      "count": 5
+    },
+    {
+      "name": "POST /api/waf/json",
+      "count": 5
+    },
+    {
+      "name": "POST /api/echo",
+      "count": 3
+    },
+    {
+      "name": "GET /api/catalog",
+      "count": 2
+    },
+    {
+      "name": "GET /api/inspect",
+      "count": 2
+    },
+    {
+      "name": "GET /api/waf/path/..%2f..%2fetc%2fpasswd",
+      "count": 1
+    },
+    {
+      "name": "GET /healthz",
+      "count": 1
+    },
+    {
+      "name": "GET /readyz",
+      "count": 1
+    },
+    {
+      "name": "POST /api/login",
+      "count": 1
+    },
+    {
+      "name": "POST /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php",
+      "count": 1
+    },
+    {
+      "name": "POST /api/waf/upload",
+      "count": 1
+    },
+    {
+      "name": "TRACE /api/echo",
+      "count": 1
+    }
+  ],
+  "top_hosts": [
+    {
+      "name": "sws.grauwolf32.tech",
+      "count": 37
+    }
+  ],
+  "top_clients": [
+    {
+      "name": "85.202.232.0/24",
+      "count": 37
+    }
+  ],
+  "timeline": [
+    {
+      "hour": "2026-08-27T22:00:00Z",
+      "events": 37,
+      "denied": 19,
+      "captcha": 0,
+      "dry_run": 0,
+      "rule_matches": 63
+    }
+  ],
+  "correlation": {
+    "run_id": "cmp-yars-20260828-final",
+    "summary": {
+      "total": 37,
+      "matched": 37,
+      "missing": 0,
+      "conflicts": 0,
+      "inconclusive": 0
+    },
+    "cases": [
+      {
+        "name": "benign-health",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-01-benign-health",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-readiness",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-02-benign-readiness",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-query",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-03-benign-query",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-repeated-query",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-04-benign-repeated-query",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-html-like-text",
+        "category": "benign-edge",
+        "request_id": "cmp-yars-20260828-final-05-benign-html-like-text",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-sql-words",
+        "category": "benign-edge",
+        "request_id": "cmp-yars-20260828-final-06-benign-sql-words",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "allow",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8020220-attack-sqli"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-shell-like-text",
+        "category": "benign-edge",
+        "request_id": "cmp-yars-20260828-final-07-benign-shell-like-text",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-form-apostrophe",
+        "category": "benign-edge",
+        "request_id": "cmp-yars-20260828-final-08-benign-form-apostrophe",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-json-code",
+        "category": "benign-edge",
+        "request_id": "cmp-yars-20260828-final-09-benign-json-code",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-login",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-10-benign-login",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-multipart",
+        "category": "benign",
+        "request_id": "cmp-yars-20260828-final-11-benign-multipart",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-body-below-limit",
+        "category": "platform-policy",
+        "request_id": "cmp-yars-20260828-final-12-benign-body-below-limit",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "benign-body-at-limit",
+        "category": "platform-policy",
+        "request_id": "cmp-yars-20260828-final-13-benign-body-at-limit",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "allow",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "body-above-binary-kib",
+        "category": "platform-policy",
+        "request_id": "cmp-yars-20260828-final-14-body-above-binary-kib",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "xss-query-script",
+        "category": "xss",
+        "request_id": "cmp-yars-20260828-final-15-xss-query-script",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8010202-attack-xss",
+          "yars-v0.1.1-id8010203-attack-xss",
+          "yars-v0.1.1-id8010212-attack-xss",
+          "yars-v0.1.1-id8010215-attack-xss",
+          "yars-v0.1.1-id8010217-attack-xss",
+          "yars-v0.1.1-id8010225-attack-xss"
+        ],
+        "max_waf_score": 40,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "xss-form-svg",
+        "category": "xss",
+        "request_id": "cmp-yars-20260828-final-16-xss-form-svg",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8010202-attack-xss",
+          "yars-v0.1.1-id8010210-attack-xss",
+          "yars-v0.1.1-id8010212-attack-xss",
+          "yars-v0.1.1-id8010215-attack-xss",
+          "yars-v0.1.1-id8010217-attack-xss",
+          "yars-v0.1.1-id8010225-attack-xss"
+        ],
+        "max_waf_score": 35,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "xss-json-img",
+        "category": "xss",
+        "request_id": "cmp-yars-20260828-final-17-xss-json-img",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8010202-attack-xss",
+          "yars-v0.1.1-id8010210-attack-xss",
+          "yars-v0.1.1-id8010212-attack-xss",
+          "yars-v0.1.1-id8010215-attack-xss",
+          "yars-v0.1.1-id8010217-attack-xss",
+          "yars-v0.1.1-id8010225-attack-xss"
+        ],
+        "max_waf_score": 35,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "sqli-query-union",
+        "category": "sqli",
+        "request_id": "cmp-yars-20260828-final-18-sqli-query-union",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8020206-attack-sqli",
+          "yars-v0.1.1-id8020207-attack-sqli",
+          "yars-v0.1.1-id8020213-attack-sqli",
+          "yars-v0.1.1-id8020220-attack-sqli",
+          "yars-v0.1.1-id8020223-attack-sqli"
+        ],
+        "max_waf_score": 30,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "sqli-form-boolean",
+        "category": "sqli",
+        "request_id": "cmp-yars-20260828-final-19-sqli-form-boolean",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8020203-attack-sqli",
+          "yars-v0.1.1-id8020205-attack-sqli",
+          "yars-v0.1.1-id8020220-attack-sqli",
+          "yars-v0.1.1-id8020227-attack-sqli"
+        ],
+        "max_waf_score": 23,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "sqli-json-time",
+        "category": "sqli",
+        "request_id": "cmp-yars-20260828-final-20-sqli-json-time",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8020202-attack-sqli",
+          "yars-v0.1.1-id8020204-attack-sqli",
+          "yars-v0.1.1-id8020206-attack-sqli",
+          "yars-v0.1.1-id8020220-attack-sqli",
+          "yars-v0.1.1-id8020226-attack-sqli"
+        ],
+        "max_waf_score": 28,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "lfi-query-unix",
+        "category": "lfi",
+        "request_id": "cmp-yars-20260828-final-21-lfi-query-unix",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8030200-attack-lfi",
+          "yars-v0.1.1-id8030202-attack-lfi",
+          "yars-v0.1.1-id8030207-attack-lfi",
+          "yars-v0.1.1-id8030216-attack-lfi"
+        ],
+        "max_waf_score": 35,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "lfi-path-encoded",
+        "category": "lfi",
+        "request_id": "cmp-yars-20260828-final-22-lfi-path-encoded",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8030200-attack-lfi",
+          "yars-v0.1.1-id8030202-attack-lfi",
+          "yars-v0.1.1-id8030207-attack-lfi"
+        ],
+        "max_waf_score": 30,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "lfi-query-windows",
+        "category": "lfi",
+        "request_id": "cmp-yars-20260828-final-23-lfi-query-windows",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8030200-attack-lfi",
+          "yars-v0.1.1-id8030202-attack-lfi"
+        ],
+        "max_waf_score": 20,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rfi-query-http",
+        "category": "rfi",
+        "request_id": "cmp-yars-20260828-final-24-rfi-query-http",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rfi-form-php-wrapper",
+        "category": "rfi",
+        "request_id": "cmp-yars-20260828-final-25-rfi-form-php-wrapper",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8080225-attack-rce"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rce-query-subshell",
+        "category": "rce",
+        "request_id": "cmp-yars-20260828-final-26-rce-query-subshell",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rce-query-semicolon",
+        "category": "rce",
+        "request_id": "cmp-yars-20260828-final-27-rce-query-semicolon",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rce-form-pipe",
+        "category": "rce",
+        "request_id": "cmp-yars-20260828-final-28-rce-form-pipe",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8030207-attack-lfi"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "rce-json-php",
+        "category": "rce",
+        "request_id": "cmp-yars-20260828-final-29-rce-json-php",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8080202-attack-rce",
+          "yars-v0.1.1-id8080226-attack-rce"
+        ],
+        "max_waf_score": 20,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "tool-sqlmap-user-agent",
+        "category": "tool",
+        "request_id": "cmp-yars-20260828-final-30-tool-sqlmap-user-agent",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8050200-attack-tool"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "tool-nikto-user-agent",
+        "category": "tool",
+        "request_id": "cmp-yars-20260828-final-31-tool-nikto-user-agent",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8050200-attack-tool"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "tool-trace-method",
+        "category": "tool",
+        "request_id": "cmp-yars-20260828-final-32-tool-trace-method",
+        "http_status": 405,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "cve-log4shell-header",
+        "category": "cve",
+        "request_id": "cmp-yars-20260828-final-33-cve-log4shell-header",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8070009-attack-cve",
+          "yars-v0.1.1-id8070031-attack-cve"
+        ],
+        "max_waf_score": 20,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "cve-spring-classloader",
+        "category": "cve",
+        "request_id": "cmp-yars-20260828-final-34-cve-spring-classloader",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8070006-attack-cve"
+        ],
+        "max_waf_score": 10,
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "cve-phpunit-path",
+        "category": "cve",
+        "request_id": "cmp-yars-20260828-final-35-cve-phpunit-path",
+        "http_status": 404,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "cve-bitrix-redirect",
+        "category": "cve",
+        "request_id": "cmp-yars-20260828-final-36-cve-bitrix-redirect",
+        "http_status": 200,
+        "http_decision": "allow",
+        "expected_decision": "block",
+        "log_decision": "allow",
+        "actions": [
+          "ALLOW"
+        ],
+        "active_verdicts": [
+          "ALLOW"
+        ],
+        "log_events": 1,
+        "status": "matched"
+      },
+      {
+        "name": "composite-multi-family",
+        "category": "composite",
+        "request_id": "cmp-yars-20260828-final-37-composite-multi-family",
+        "http_status": 403,
+        "http_decision": "block",
+        "expected_decision": "block",
+        "log_decision": "block",
+        "actions": [
+          "DENY"
+        ],
+        "active_verdicts": [
+          "DENY"
+        ],
+        "rule_ids": [
+          "yars-v0.1.1-id8010202-attack-xss",
+          "yars-v0.1.1-id8010203-attack-xss",
+          "yars-v0.1.1-id8010215-attack-xss",
+          "yars-v0.1.1-id8010217-attack-xss",
+          "yars-v0.1.1-id8010225-attack-xss",
+          "yars-v0.1.1-id8020203-attack-sqli",
+          "yars-v0.1.1-id8020220-attack-sqli",
+          "yars-v0.1.1-id8020227-attack-sqli",
+          "yars-v0.1.1-id8030200-attack-lfi",
+          "yars-v0.1.1-id8030202-attack-lfi",
+          "yars-v0.1.1-id8030207-attack-lfi",
+          "yars-v0.1.1-id8030216-attack-lfi"
+        ],
+        "max_waf_score": 83,
+        "log_events": 1,
+        "status": "matched"
+      }
+    ]
+  }
+}

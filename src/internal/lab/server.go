@@ -154,6 +154,11 @@ func (s *Server) recoverPanics(next http.Handler) http.Handler {
 
 func (s *Server) observeRequests(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if isALBHTTPHealthCheck(r) {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		started := time.Now()
 		recorder := &responseRecorder{ResponseWriter: w}
 		s.stats.begin()
@@ -179,6 +184,13 @@ func (s *Server) observeRequests(next http.Handler) http.Handler {
 
 		next.ServeHTTP(recorder, r)
 	})
+}
+
+func isALBHTTPHealthCheck(r *http.Request) bool {
+	if r.UserAgent() != "Envoy/HC" || strings.TrimSpace(r.Header.Get("X-Forwarded-For")) != "" {
+		return false
+	}
+	return r.URL.Path == "/" || r.URL.Path == "/healthz" || r.URL.Path == "/readyz"
 }
 
 type responseRecorder struct {

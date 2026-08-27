@@ -251,3 +251,17 @@ func TestStatsCountsRequestsByClientType(t *testing.T) {
 		t.Fatalf("http-client count = %v, want 1", got)
 	}
 }
+
+func TestALBHealthCheckIsNotCounted(t *testing.T) {
+	handler := testHandler(t, DefaultConfig())
+	healthRequest := httptest.NewRequest(http.MethodGet, "/healthz", nil)
+	healthRequest.Header.Set("User-Agent", "Envoy/HC")
+	performRequest(t, handler, healthRequest)
+
+	statsRequest := httptest.NewRequest(http.MethodGet, "/api/stats", nil)
+	statsRecorder := performRequest(t, handler, statsRequest)
+	result := decodeResponse(t, statsRecorder)
+	if got := result["requests_received"].(float64); got != 0 {
+		t.Fatalf("requests_received = %v, want 0 after ALB health check", got)
+	}
+}

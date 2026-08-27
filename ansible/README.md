@@ -7,16 +7,17 @@ inventory не содержит жёстко заданных IP.
 На VM устанавливается один статический Go-бинарник и hardened systemd unit:
 
 - сервис работает от непривилегированного пользователя `sws-lab`;
-- единственная capability — `CAP_NET_BIND_SERVICE` для порта `80`;
-- `TRUST_PROXY_HEADERS=true`, поскольку вход на `80` ограничен `backend-sg` и
-  разрешён только от `alb-sg`;
-- хосты обновляются по одному, после каждого обновления проверяется `/healthz`;
+- единственная capability — `CAP_NET_BIND_SERVICE` для HTTP-порта `80`;
+- `TRUST_PROXY_HEADERS=true`, поскольку вход на `80` и `9090` ограничен
+  `backend-sg` и разрешён только от `alb-sg`;
+- хосты обновляются по одному, после каждого обновления проверяются `/healthz`
+  и локальный gRPC listener на `9090`;
 - в конце с backend A проверяется путь через публичный HTTP listener ALB на
   порту `80`;
 
 ## Подготовка
 
-Нужны Python 3, Go 1.23+ и Terraform state в `../terraform`. По умолчанию
+Нужны Python 3, Go 1.25+ и Terraform state в `../terraform`. По умолчанию
 playbook использует локальный ключ без passphrase `.keys/ansible_ed25519`.
 Каталог `.keys/` исключён из Git; публичная часть хранится в
 `../terraform/files/ssh/ansible-deploy.pub` и устанавливается через cloud-init.

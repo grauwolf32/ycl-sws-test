@@ -4,7 +4,8 @@ ARG GO_VERSION=1.25
 FROM golang:${GO_VERSION}-alpine AS build
 WORKDIR /src
 
-COPY go.mod ./
+COPY go.mod go.sum ./
+RUN go mod download
 COPY cmd ./cmd
 COPY internal ./internal
 
@@ -19,7 +20,8 @@ FROM scratch
 COPY --from=build /out/sws-lab /sws-lab
 
 USER 65532:65532
-EXPOSE 8080
+EXPOSE 8080 9090
 ENV ADDR=:8080
+ENV GRPC_ADDR=:9090
 
 ENTRYPOINT ["/sws-lab"]

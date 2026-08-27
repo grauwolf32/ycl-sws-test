@@ -48,7 +48,34 @@ resource "yandex_alb_backend_group" "test" {
       healthcheck_port    = 80
 
       http_healthcheck {
-        path = "/"
+        path = "/healthz"
+      }
+    }
+  }
+}
+
+resource "yandex_alb_backend_group" "grpc" {
+  name = "test-grpc-backend-group"
+
+  grpc_backend {
+    name             = "sws-test-grpc-backends"
+    weight           = 1
+    port             = var.grpc_backend_port
+    target_group_ids = [yandex_alb_target_group.test.id]
+
+    load_balancing_config {
+      mode = "ROUND_ROBIN"
+    }
+
+    healthcheck {
+      timeout             = "2s"
+      interval            = "5s"
+      healthy_threshold   = 2
+      unhealthy_threshold = 2
+      healthcheck_port    = var.grpc_backend_port
+
+      grpc_healthcheck {
+        service_name = "sws.lab.v1.LabService"
       }
     }
   }
@@ -66,6 +93,46 @@ resource "yandex_alb_virtual_host" "test" {
 
   route_options {
     security_profile_id = module.security.sws_security_profile_id
+  }
+
+  # gRPC routes must precede the HTTP catch-all. Both route types can share
+  # this virtual host, certificate, listener, and SWS security profile.
+  route {
+    name = "grpc-lab-to-test-backends"
+
+    grpc_route {
+      grpc_match {
+        fqmn {
+          prefix = "/sws.lab.v1.LabService/"
+        }
+      }
+
+      grpc_route_action {
+        backend_group_id = yandex_alb_backend_group.grpc.id
+        max_timeout      = "60s"
+        idle_timeout     = "10s"
+      }
+    }
+  }
+
+  route {
+    name = "grpc-system-to-test-backends"
+
+    grpc_route {
+      grpc_match {
+        fqmn {
+          # Covers grpc.health.v1 and grpc.reflection.v1/v1alpha without
+          # intercepting ordinary HTTP/2 paths such as "/".
+          prefix = "/grpc."
+        }
+      }
+
+      grpc_route_action {
+        backend_group_id = yandex_alb_backend_group.grpc.id
+        max_timeout      = "60s"
+        idle_timeout     = "10s"
+      }
+    }
   }
 
   route {

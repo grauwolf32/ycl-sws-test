@@ -9,10 +9,13 @@
 - Application Load Balancer с HTTP listener на порту `80` и HTTPS listener на
   порту `443`;
 - управляемый сертификат Let's Encrypt для `sws.grauwolf32.tech`;
-- target group, backend group, HTTP router и virtual host;
-- Smart Web Security с Smart Protection и OWASP CRS WAF.
+- target group, отдельные HTTP/gRPC backend groups, HTTP router и virtual host;
+- gRPC route на backend-порт `9090` в том же virtual host;
+- Smart Web Security с переключаемыми OWASP CRS/Yandex Ruleset WAF-профилями:
+  API-защита без CAPTCHA для `/api/**` и gRPC, полная защита для остального
+  трафика.
 
-Backend принимает HTTP только от `alb-sg`, а SSH — только из адресов
+Backend принимает HTTP и gRPC только от `alb-sg`, а SSH — только из адресов
 `admin_cidrs`. Egress пока намеренно не ограничен.
 
 ## Состав
@@ -53,19 +56,98 @@ terraform apply
 terraform output
 ```
 
-Smart Protection и WAF по умолчанию работают в режиме `dry_run`: запросы не
-блокируются, а срабатывания записываются в Cloud Logging. WAF стартует с OWASP
-CRS 4.0, paranoia level `1` и порогом аномальности `25`. После анализа логов и
-настройки исключений защиту можно включить явно:
+Правила WAF по умолчанию работают в режиме `dry_run`: запросы не блокируются, а
+срабатывания записываются в Cloud Logging. Запросы с префиксом `/api` и
+`Content-Type: application/grpc`, `/healthz` и `/readyz` проверяются в режиме
+`API` без перенаправления на CAPTCHA, остальные — в режиме `FULL`. WAF стартует
+с OWASP CRS 4.0, paranoia
+level `1` и порогом аномальности `5`. Правило `920280` отключено из-за
+подтверждённого ложного срабатывания на HTTP/2. Для gRPC узко исключены пять
+protocol-enforcement правил, ложно распознающих HTTP/2/protobuf framing как
+отсутствие заголовков, null/CRLF injection или недопустимый Content-Type;
+XSS/SQLi/LFI/RCE-сигнатуры продолжают применяться.
+
+Переменная `sws_dry_run` по умолчанию безопасно равна `true`, но текущий стенд
+после калибровки 27 августа 2026 года закрепляет `false` в `terraform.tfvars`.
+Для временного возврата только к журналированию используйте:
 
 ```bash
-terraform apply -var='sws_dry_run=false'
+terraform apply -var='sws_dry_run=true'
 ```
+
+SWS анализирует первые `8` КиБ тела запроса. Для более крупных тел выбран
+безопасный default `DENY`: пока соответствующее WAF-правило работает в
+`dry_run`, запрос всё ещё проходит, а после включения enforcement SWS вернёт
+`403`. Это предотвращает обход body inspection добавлением padding, но
+ограничивает multipart/upload API. Превышение этого профильного лимита не всегда
+создаёт отдельное dry-run событие, поэтому перед общим включением блокировки
+нужен короткий контролируемый тест.
+
+Если для отдельного API действительно нужны большие тела, временно переключить
+поведение можно так:
+
+```bash
+terraform apply -var='waf_body_size_limit_action=IGNORE'
+```
+
+При `IGNORE` WAF продолжит проверять URL и заголовки, но не содержимое слишком
+большого тела. Предпочтительнее вынести большой upload на отдельный virtual host
+с собственным профилем и компенсирующими ограничениями. Лимит анализа и действие
+задаются переменными `waf_body_size_limit_kb` и
+`waf_body_size_limit_action`; допустимый максимум анализа SWS — 8 КиБ.
+
+## Выбор managed rule set
+
+Terraform создаёт два независимых WAF-профиля и подключает к правилам SWS один
+из них через `waf_active_ruleset`:
+
+- `OWASP_CRS` — OWASP CRS 4.0.0, PL1, общий threshold `5`;
+- `YANDEX_RULESET` — Yandex Ruleset 0.1.1, все 129 правил и семь групп с
+  отдельным threshold `7`.
+
+По умолчанию и в текущем рабочем состоянии активен `OWASP_CRS`. Безопасный
+пробный запуск Yandex Ruleset выполняется только в dry-run:
+
+```bash
+terraform apply \
+  -var='waf_active_ruleset=YANDEX_RULESET' \
+  -var='sws_dry_run=true'
+```
+
+После проверки верните рабочий профиль:
+
+```bash
+terraform apply \
+  -var='waf_active_ruleset=OWASP_CRS' \
+  -var='sws_dry_run=false'
+```
+
+Не удаляйте ключи из `yandex_ruleset_rule_groups`: без включённых групп
+сигнатуры Yandex Ruleset не формируют ожидаемый групповой verdict. Lifecycle-
+precondition требует явных настроек для всех семи групп; нужную группу можно
+осознанно выключить через `is_enabled = false`. `yandex_ruleset_direct_blocking=true`
+обходит anomaly thresholds и предназначен только для контролируемого discovery,
+не для production.
+
+Точная методика настройки и rollback описаны в
+[`../SWS_TUNING_GUIDE.md`](../SWS_TUNING_GUIDE.md), результаты A/B-теста — в
+[`../YANDEX_RULESET_COMPARISON_2026-08-28.md`](../YANDEX_RULESET_COMPARISON_2026-08-28.md).
 
 HTTP и HTTPS используют один HTTP router и virtual host, поэтому к обоим
 протоколам применяется один и тот же профиль Smart Web Security. Для
 автоматического продления сертификата оставьте у внешнего DNS-провайдера CNAME
 `_acme-challenge.sws.grauwolf32.tech` на значение, выданное Certificate Manager.
+
+gRPC использует тот же HTTPS listener, сертификат, HTTP router, virtual host и
+профиль SWS. Отдельный router не требуется; публичная точка подключения
+выводится командой `terraform output grpc_target`.
+
+OWASP CRS не декодирует protobuf по `.proto`-схеме: WAF эвристически проверяет
+HTTP/2 headers и байты gRPC frame. Это помогает обнаруживать текстовые маркеры,
+но может давать протокольные false positive и не заменяет gRPC-аутентификацию,
+авторизацию, rate limiting и валидацию сообщений в приложении. Перед отключением
+`dry_run` соберите benign gRPC-трафик и добавляйте только узкие исключения для
+подтверждённых ложных срабатываний.
 
 По умолчанию используется обычный образ `ubuntu-2404-lts`, а не OS Login
 image. Пользовательский RSA-ключ находится в `files/ssh/r-bomin-rsa.pub`, а
@@ -86,7 +168,7 @@ terraform output ssh_commands
 ## Ограничения тестового окружения
 
 - HTTP на порту `80` пока доступен без перенаправления на HTTPS;
-- Smart Protection и WAF по умолчанию не блокируют трафик (`dry_run = true`);
+- правила SWS WAF по умолчанию не блокируют трафик (`dry_run = true`);
 - ALB и backend VM имеют unrestricted egress;
 - обе backend VM имеют публичные IP для прямого SSH;
 - Terraform state локальный; для совместной работы нужен remote backend.

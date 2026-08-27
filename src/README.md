@@ -14,6 +14,8 @@
 - просмотр безопасного подмножества заголовков, которые видит origin;
 - счётчики запросов в памяти и JSON-логи;
 - health/readiness endpoints;
+- тестовый native gRPC API: health, reflection, unary и server-streaming вызовы;
+- сквозной `X-Request-ID` для сопоставления HTTP/gRPC-запросов с edge- и origin-логами;
 - Docker-образ без shell, root и внешних runtime-зависимостей;
 - автоматические тесты.
 
@@ -28,7 +30,7 @@ X-Request-ID: lab-...
 
 ## Быстрый запуск
 
-Требуется Go 1.23 или новее.
+Требуется Go 1.25 или новее.
 
 ```bash
 go run -buildvcs=false ./cmd/sws-lab
@@ -39,6 +41,7 @@ go run -buildvcs=false ./cmd/sws-lab
 ```bash
 curl -i http://localhost:8080/healthz
 curl -s http://localhost:8080/api/inspect
+go run -buildvcs=false ./cmd/grpc-check -target 127.0.0.1:9090 -plaintext
 ```
 
 Сборка бинарного файла:
@@ -61,7 +64,9 @@ docker compose up --build
 Актуально на август 2026 года: профиль безопасности SWS можно подключить к виртуальному хосту Application Load Balancer, API Gateway или защищаемому домену. Для этого стенда типовая схема выглядит так:
 
 ```text
-тестовый клиент → защищённый host/domain → SWS profile → HTTP backend sws-lab:8080
+тестовый клиент → защищённый host/domain → SWS profile → ALB HTTP/gRPC routes
+                                                     ├→ HTTP backend :8080
+                                                     └→ gRPC backend :9090
 ```
 
 Официальные инструкции:
@@ -80,7 +85,15 @@ docker compose up --build
 6. Переведите проверенные правила в режим полной защиты и повторите матрицу.
 7. Для API-сценариев учитывайте, что защита не должна рассчитывать на выполнение JavaScript клиентом; для browser-сценария откройте главную страницу настоящим браузером.
 
+Для gRPC-маршрута также используйте режим защиты API: gRPC-клиент не может
+пройти browser CAPTCHA. В Terraform этого стенда gRPC определяется по префиксу
+`Content-Type: application/grpc`.
+
 Если backend принимает соединения только от доверенного балансировщика/прокси, установите `TRUST_PROXY_HEADERS=true`. Не включайте эту настройку для origin, доступного клиентам напрямую: иначе любой клиент сможет подменить `X-Forwarded-For`.
+
+Успешные служебные health checks ALB (`Envoy/HC`) намеренно не учитываются в
+счётчиках приложения и не записываются как обычные HTTP/gRPC-запросы. Ошибки
+проверок по-прежнему попадают в логи балансировщика и systemd.
 
 ## Как читать результат
 
@@ -168,6 +181,9 @@ curl -i -F 'document=@README.md;type=text/plain' \
 ```
 
 Файл не записывается: приложение вычисляет SHA-256 по потоку и отбрасывает содержимое.
+В текущем Terraform-профиле для тела больше 8 КиБ настроено действие `DENY`.
+Пока WAF-правила работают в `dry_run`, такой upload доходит до приложения;
+после включения enforcement SWS должен остановить его с `403`.
 
 ## Проверка антибота
 
@@ -196,6 +212,40 @@ done
 
 Результат антибот-проверки оценивайте по событиям SWS, CAPTCHA/блокировке на клиенте и отсутствию соответствующих запросов в origin-логах. Классификация `by_client_type` в `/api/stats` основана только на User-Agent и является диагностикой стенда, а не собственной антибот-защитой.
 
+## Проверка gRPC
+
+Описание API находится в `api/sws/lab/v1/lab.proto`. Сервер включает стандартный
+`grpc.health.v1.Health`, reflection и три тестовых вызова:
+
+| RPC | Тип | Назначение |
+|---|---|---|
+| `Ping` | unary | Базовая проверка маршрута и backend |
+| `Echo` | unary | Безопасный возврат строки и labels без исполнения данных |
+| `Watch` | server streaming | Проверка HTTP/2 stream и idle timeout ALB |
+
+Проверка публичного TLS endpoint встроенным клиентом:
+
+```bash
+go run -buildvcs=false ./cmd/grpc-check \
+  -target sws.grauwolf32.tech:443 \
+  -test-id manual-grpc-check-001
+```
+
+При наличии `grpcurl` reflection позволяет обращаться без локального proto:
+
+```bash
+grpcurl sws.grauwolf32.tech:443 list
+grpcurl -d '{}' sws.grauwolf32.tech:443 sws.lab.v1.LabService/Ping
+grpcurl -d '{"value":"hello"}' \
+  sws.grauwolf32.tech:443 sws.lab.v1.LabService/Echo
+grpcurl -d '{"message":"event","count":3,"intervalMs":250}' \
+  sws.grauwolf32.tech:443 sws.lab.v1.LabService/Watch
+```
+
+Сгенерированные Go bindings хранятся в репозитории. После изменения proto
+пересоздайте их командой `make generate` (нужен `protoc`; плагины установятся в
+локальный игнорируемый каталог `.tools/`).
+
 ## Маршруты
 
 | Метод | Путь | Назначение |
@@ -222,6 +272,7 @@ done
 |---|---:|---|
 | `ADDR` | `:8080` | Адрес HTTP listener |
 | `PORT` | — | Порт, если `ADDR` не задан |
+| `GRPC_ADDR` | `:9090` | Адрес native gRPC listener |
 | `APP_NAME` | `Yandex SWS Test Lab` | Название в UI |
 | `MAX_BODY_BYTES` | `1048576` | Лимит тела, от 1 KiB до 10 MiB |
 | `MAX_DELAY_MS` | `2000` | Верхняя граница `/api/slow`, до 10 s |
@@ -230,7 +281,8 @@ done
 Пример для закрытого backend за балансировщиком:
 
 ```bash
-TRUST_PROXY_HEADERS=true ADDR=:8080 go run -buildvcs=false ./cmd/sws-lab
+TRUST_PROXY_HEADERS=true ADDR=:8080 GRPC_ADDR=:9090 \
+  go run -buildvcs=false ./cmd/sws-lab
 ```
 
 ## Логи и приватность
@@ -246,4 +298,5 @@ make check
 make test-race
 ```
 
-В проекте нет сторонних Go-модулей.
+gRPC bindings генерируются из proto и фиксируются в репозитории; runtime-зависимости
+зафиксированы в `go.mod` и `go.sum`.

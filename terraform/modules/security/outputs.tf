@@ -14,8 +14,18 @@ output "sws_security_profile_id" {
 }
 
 output "waf_profile_id" {
-  description = "OWASP CRS WAF profile used by Smart Web Security."
+  description = "Active managed WAF profile used by Smart Web Security."
+  value       = local.active_waf_profile_id
+}
+
+output "owasp_waf_profile_id" {
+  description = "OWASP CRS WAF profile available for comparison."
   value       = yandex_sws_waf_profile.test.id
+}
+
+output "yandex_waf_profile_id" {
+  description = "Yandex Ruleset WAF profile available for comparison."
+  value       = yandex_sws_waf_profile.yandex.id
 }
 
 output "log_group_id" {

@@ -1,0 +1,1069 @@
+{
+  "schema_version": "wafcheck/v1",
+  "run_id": "cmp-owasp-20260828-final",
+  "target": "https://sws.grauwolf32.tech",
+  "started_at": "2026-08-27T22:35:30.291110775Z",
+  "finished_at": "2026-08-27T22:35:30.915384946Z",
+  "summary": {
+    "total": 37,
+    "passed": 34,
+    "failed": 3,
+    "errors": 0,
+    "decisions": {
+      "allow": 14,
+      "block": 23
+    }
+  },
+  "results": [
+    {
+      "name": "benign-health",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-01-benign-health",
+      "started_at": "2026-08-27T22:35:30.86537689Z",
+      "duration_ms": 17.137,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/healthz",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "92"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-01-benign-health"
+        ]
+      }
+    },
+    {
+      "name": "benign-readiness",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-02-benign-readiness",
+      "started_at": "2026-08-27T22:35:30.850730251Z",
+      "duration_ms": 14.629,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/readyz",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "92"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-02-benign-readiness"
+        ]
+      }
+    },
+    {
+      "name": "benign-query",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-03-benign-query",
+      "started_at": "2026-08-27T22:35:30.882532921Z",
+      "duration_ms": 14.786,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=%D0%9E%D0%B1%D1%8B%D1%87%D0%BD%D1%8B%D0%B9+%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%3A+%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7+42%2C+%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "167"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-03-benign-query"
+        ]
+      }
+    },
+    {
+      "name": "benign-repeated-query",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-04-benign-repeated-query",
+      "started_at": "2026-08-27T22:35:30.897342906Z",
+      "duration_ms": 17.835,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/inspect?tag=blue\u0026tag=green\u0026tag=summer-sale",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "641"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-04-benign-repeated-query"
+        ]
+      }
+    },
+    {
+      "name": "benign-html-like-text",
+      "category": "benign-edge",
+      "request_id": "cmp-owasp-20260828-final-05-benign-html-like-text",
+      "started_at": "2026-08-27T22:35:30.291128903Z",
+      "duration_ms": 53.169,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=Documentation+says%3A+use+%3Cstrong%3Ebold%3C%2Fstrong%3E.",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "186"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-05-benign-html-like-text"
+        ]
+      }
+    },
+    {
+      "name": "benign-sql-words",
+      "category": "benign-edge",
+      "request_id": "cmp-owasp-20260828-final-06-benign-sql-words",
+      "started_at": "2026-08-27T22:35:30.360018743Z",
+      "duration_ms": 21.743,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=Select+a+plan+for+union+members+and+update+the+draft.",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "168"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-06-benign-sql-words"
+        ]
+      }
+    },
+    {
+      "name": "benign-shell-like-text",
+      "category": "benign-edge",
+      "request_id": "cmp-owasp-20260828-final-07-benign-shell-like-text",
+      "started_at": "2026-08-27T22:35:30.38178498Z",
+      "duration_ms": 15.282,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=Release+candidate%3B+id+is+42+and+status+is+green.",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "169"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-07-benign-shell-like-text"
+        ]
+      }
+    },
+    {
+      "name": "benign-form-apostrophe",
+      "category": "benign-edge",
+      "request_id": "cmp-owasp-20260828-final-08-benign-form-apostrophe",
+      "started_at": "2026-08-27T22:35:30.397085283Z",
+      "duration_ms": 18.607,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/form",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "252"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-08-benign-form-apostrophe"
+        ]
+      }
+    },
+    {
+      "name": "benign-json-code",
+      "category": "benign-edge",
+      "request_id": "cmp-owasp-20260828-final-09-benign-json-code",
+      "started_at": "2026-08-27T22:35:30.415715055Z",
+      "duration_ms": 14.422,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/json",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "allow",
+      "passed": false,
+      "reasons": [
+        "decision: got block, want allow",
+        "status: got 403, want one of [200]",
+        "header X-Lab-Response: got \"\", want \"origin\""
+      ],
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "benign-login",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-10-benign-login",
+      "started_at": "2026-08-27T22:35:30.430149994Z",
+      "duration_ms": 14.513,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/login",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "116"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-10-benign-login"
+        ]
+      }
+    },
+    {
+      "name": "benign-multipart",
+      "category": "benign",
+      "request_id": "cmp-owasp-20260828-final-11-benign-multipart",
+      "started_at": "2026-08-27T22:35:30.444683926Z",
+      "duration_ms": 18.239,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/upload",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "387"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-11-benign-multipart"
+        ]
+      }
+    },
+    {
+      "name": "benign-body-below-limit",
+      "category": "platform-policy",
+      "request_id": "cmp-owasp-20260828-final-12-benign-body-below-limit",
+      "started_at": "2026-08-27T22:35:30.462937865Z",
+      "duration_ms": 23.624,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/echo",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-12-benign-body-below-limit"
+        ]
+      }
+    },
+    {
+      "name": "benign-body-at-limit",
+      "category": "platform-policy",
+      "request_id": "cmp-owasp-20260828-final-13-benign-body-at-limit",
+      "started_at": "2026-08-27T22:35:30.486582642Z",
+      "duration_ms": 33.716,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/echo",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "allow",
+      "passed": true,
+      "response_headers": {
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-13-benign-body-at-limit"
+        ]
+      }
+    },
+    {
+      "name": "body-above-binary-kib",
+      "category": "platform-policy",
+      "request_id": "cmp-owasp-20260828-final-14-body-above-binary-kib",
+      "started_at": "2026-08-27T22:35:30.520326958Z",
+      "duration_ms": 13.505,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/echo",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "xss-query-script",
+      "category": "xss",
+      "request_id": "cmp-owasp-20260828-final-15-xss-query-script",
+      "started_at": "2026-08-27T22:35:30.533842071Z",
+      "duration_ms": 14.3,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=%3Cscript%3Ealert%28%27wafcheck%27%29%3C%2Fscript%3E",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "xss-form-svg",
+      "category": "xss",
+      "request_id": "cmp-owasp-20260828-final-16-xss-form-svg",
+      "started_at": "2026-08-27T22:35:30.548152499Z",
+      "duration_ms": 14.126,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/form",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "xss-json-img",
+      "category": "xss",
+      "request_id": "cmp-owasp-20260828-final-17-xss-json-img",
+      "started_at": "2026-08-27T22:35:30.562284415Z",
+      "duration_ms": 16.079,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/json",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "sqli-query-union",
+      "category": "sqli",
+      "request_id": "cmp-owasp-20260828-final-18-sqli-query-union",
+      "started_at": "2026-08-27T22:35:30.578376077Z",
+      "duration_ms": 14.66,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=%27+UNION+SELECT+password+FROM+users--+wafcheck",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "sqli-form-boolean",
+      "category": "sqli",
+      "request_id": "cmp-owasp-20260828-final-19-sqli-form-boolean",
+      "started_at": "2026-08-27T22:35:30.593057812Z",
+      "duration_ms": 14.069,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/form",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "sqli-json-time",
+      "category": "sqli",
+      "request_id": "cmp-owasp-20260828-final-20-sqli-json-time",
+      "started_at": "2026-08-27T22:35:30.607148565Z",
+      "duration_ms": 15.375,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/json",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "lfi-query-unix",
+      "category": "lfi",
+      "request_id": "cmp-owasp-20260828-final-21-lfi-query-unix",
+      "started_at": "2026-08-27T22:35:30.622543868Z",
+      "duration_ms": 14.089,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=..%2F..%2F..%2F..%2Fetc%2Fpasswd",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "lfi-path-encoded",
+      "category": "lfi",
+      "request_id": "cmp-owasp-20260828-final-22-lfi-path-encoded",
+      "started_at": "2026-08-27T22:35:30.636644248Z",
+      "duration_ms": 13.152,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/waf/path/..%2f..%2fetc%2fpasswd",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "lfi-query-windows",
+      "category": "lfi",
+      "request_id": "cmp-owasp-20260828-final-23-lfi-query-windows",
+      "started_at": "2026-08-27T22:35:30.649815415Z",
+      "duration_ms": 13.752,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=..%5C..%5Cwindows%5Cwin.ini",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "rfi-query-http",
+      "category": "rfi",
+      "request_id": "cmp-owasp-20260828-final-24-rfi-query-http",
+      "started_at": "2026-08-27T22:35:30.663585578Z",
+      "duration_ms": 13.723,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=http%3A%2F%2F192.0.2.1%2Fwafcheck.txt%3F",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "rfi-form-php-wrapper",
+      "category": "rfi",
+      "request_id": "cmp-owasp-20260828-final-25-rfi-form-php-wrapper",
+      "started_at": "2026-08-27T22:35:30.677329049Z",
+      "duration_ms": 16.424,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/form",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "rce-query-subshell",
+      "category": "rce",
+      "request_id": "cmp-owasp-20260828-final-26-rce-query-subshell",
+      "started_at": "2026-08-27T22:35:30.69377857Z",
+      "duration_ms": 14.048,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=%24%28id%29",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "rce-query-semicolon",
+      "category": "rce",
+      "request_id": "cmp-owasp-20260828-final-27-rce-query-semicolon",
+      "started_at": "2026-08-27T22:35:30.707852557Z",
+      "duration_ms": 14.008,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?value=hello%3B+id",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "block",
+      "passed": false,
+      "reasons": [
+        "decision: got allow, want block",
+        "status: got 200, want one of [403]",
+        "header X-Lab-Response must be absent"
+      ],
+      "response_headers": {
+        "Content-Length": [
+          "127"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-27-rce-query-semicolon"
+        ]
+      }
+    },
+    {
+      "name": "rce-form-pipe",
+      "category": "rce",
+      "request_id": "cmp-owasp-20260828-final-28-rce-form-pipe",
+      "started_at": "2026-08-27T22:35:30.721881737Z",
+      "duration_ms": 14.79,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/form",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "rce-json-php",
+      "category": "rce",
+      "request_id": "cmp-owasp-20260828-final-29-rce-json-php",
+      "started_at": "2026-08-27T22:35:30.736690644Z",
+      "duration_ms": 14.241,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/json",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "tool-sqlmap-user-agent",
+      "category": "tool",
+      "request_id": "cmp-owasp-20260828-final-30-tool-sqlmap-user-agent",
+      "started_at": "2026-08-27T22:35:30.750948101Z",
+      "duration_ms": 13.232,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/catalog",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "tool-nikto-user-agent",
+      "category": "tool",
+      "request_id": "cmp-owasp-20260828-final-31-tool-nikto-user-agent",
+      "started_at": "2026-08-27T22:35:30.764213025Z",
+      "duration_ms": 13.075,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/catalog",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "tool-trace-method",
+      "category": "tool",
+      "request_id": "cmp-owasp-20260828-final-32-tool-trace-method",
+      "started_at": "2026-08-27T22:35:30.777307044Z",
+      "duration_ms": 13.564,
+      "method": "TRACE",
+      "url": "https://sws.grauwolf32.tech/api/echo",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "cve-log4shell-header",
+      "category": "cve",
+      "request_id": "cmp-owasp-20260828-final-33-cve-log4shell-header",
+      "started_at": "2026-08-27T22:35:30.790887287Z",
+      "duration_ms": 13.208,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/inspect",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "cve-spring-classloader",
+      "category": "cve",
+      "request_id": "cmp-owasp-20260828-final-34-cve-spring-classloader",
+      "started_at": "2026-08-27T22:35:30.804116191Z",
+      "duration_ms": 18.162,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp",
+      "status": 200,
+      "decision": "allow",
+      "expected_decision": "block",
+      "passed": false,
+      "reasons": [
+        "decision: got allow, want block",
+        "status: got 200, want one of [403]",
+        "header X-Lab-Response must be absent"
+      ],
+      "response_headers": {
+        "Content-Length": [
+          "121"
+        ],
+        "Content-Type": [
+          "application/json; charset=utf-8"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Lab-Response": [
+          "origin"
+        ],
+        "X-Request-ID": [
+          "cmp-owasp-20260828-final-34-cve-spring-classloader"
+        ]
+      }
+    },
+    {
+      "name": "cve-phpunit-path",
+      "category": "cve",
+      "request_id": "cmp-owasp-20260828-final-35-cve-phpunit-path",
+      "started_at": "2026-08-27T22:35:30.822310165Z",
+      "duration_ms": 14.156,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "cve-bitrix-redirect",
+      "category": "cve",
+      "request_id": "cmp-owasp-20260828-final-36-cve-bitrix-redirect",
+      "started_at": "2026-08-27T22:35:30.836483234Z",
+      "duration_ms": 14.216,
+      "method": "GET",
+      "url": "https://sws.grauwolf32.tech/api/echo?SEF_APPLICATION_CUR_PAGE_URL=https%3A%2F%2F192.0.2.1%2Fwafcheck",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    },
+    {
+      "name": "composite-multi-family",
+      "category": "composite",
+      "request_id": "cmp-owasp-20260828-final-37-composite-multi-family",
+      "started_at": "2026-08-27T22:35:30.344303595Z",
+      "duration_ms": 15.71,
+      "method": "POST",
+      "url": "https://sws.grauwolf32.tech/api/waf/json",
+      "status": 403,
+      "decision": "block",
+      "expected_decision": "block",
+      "passed": true,
+      "response_headers": {
+        "Content-Length": [
+          "2690"
+        ],
+        "Content-Type": [
+          "text/html"
+        ],
+        "Server": [
+          "ycalb"
+        ],
+        "X-Yandex-Captcha": [
+          "403"
+        ]
+      }
+    }
+  ]
+}

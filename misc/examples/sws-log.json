@@ -1,0 +1,77 @@
+[
+  {
+    "uid": "sample-allow",
+    "timestamp": "2026-08-28T10:00:00Z",
+    "json_payload": {
+      "client_ip": "192.0.2.10",
+      "labels.action": "ALLOW",
+      "labels.alb_request_id": "demo-01-baseline",
+      "labels.http_host": "app.example.test",
+      "labels.http_method": "GET",
+      "labels.http_path": "/search?value=ordinary",
+      "matched_rule_name": "default",
+      "matched_rule_type": "SMART_PROTECTION",
+      "matched_rule_verdict": "ALLOW"
+    }
+  },
+  {
+    "uid": "sample-active-deny",
+    "timestamp": "2026-08-28T10:01:00Z",
+    "json_payload": {
+      "client_ip": "192.0.2.25",
+      "country": "ru",
+      "labels.action": "DENY",
+      "labels.alb_request_id": "demo-02-xss",
+      "labels.http_host": "app.example.test",
+      "labels.http_method": "GET",
+      "labels.http_path": "/search?value=wafcheck",
+      "matched_rule_name": "waf-api",
+      "matched_rule_type": "WAF",
+      "matched_rule_verdict": "DENY",
+      "waf_profile_id": "sample-waf-profile",
+      "waf_matched_rules": {
+        "OWASP_CRS_4_0_0": {
+          "rules": [
+            {
+              "rule_id": "owasp-crs-v4.0.0-id941100-attack-xss",
+              "score": 5,
+              "is_blocking_rule": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "uid": "sample-dry-run",
+    "timestamp": "2026-08-28T10:02:00Z",
+    "json_payload": {
+      "client_ip": "2001:db8:1234:5678::10",
+      "labels": {
+        "action": "ALLOW",
+        "alb_request_id": "demo-03-sqli",
+        "http_host": "app.example.test",
+        "http_method": "POST",
+        "http_path": "/login"
+      },
+      "smartwebsecurity": {
+        "dry_run_matched_rule": {
+          "name": "waf-api-dry",
+          "rule_type": "WAF",
+          "verdict": "DENY"
+        },
+        "dry_run_waf_matched_rules": {
+          "OWASP_CRS_4_0_0": {
+            "rules": [
+              {
+                "rule_id": "owasp-crs-v4.0.0-id942100-attack-sqli",
+                "score": 5,
+                "is_blocking_rule": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+]

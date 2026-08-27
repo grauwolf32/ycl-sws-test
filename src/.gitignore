@@ -1,6 +1,6 @@
 /bin/
+/.tools/
 /coverage.out
 *.log
 .idea/
 .vscode/
-

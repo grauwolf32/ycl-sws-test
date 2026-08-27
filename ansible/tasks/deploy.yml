@@ -78,3 +78,10 @@
   delay: 2
   changed_when: false
 
+- name: Verify local gRPC listener
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: "{{ sws_lab_grpc_listen_address | regex_replace('^.*:', '') | int }}"
+    state: started
+    timeout: 30
+  changed_when: false

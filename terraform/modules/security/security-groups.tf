@@ -49,13 +49,20 @@ resource "yandex_vpc_security_group" "alb" {
 
 resource "yandex_vpc_security_group" "backend" {
   name        = "backend-sg"
-  description = "Backend HTTP from ALB and SSH from administrator addresses"
+  description = "Backend HTTP/gRPC from ALB and SSH from administrator addresses"
   network_id  = var.network_id
 
   ingress {
     description       = "Application traffic and backend health checks from ALB"
     protocol          = "TCP"
     port              = 80
+    security_group_id = yandex_vpc_security_group.alb.id
+  }
+
+  ingress {
+    description       = "gRPC traffic and backend health checks from ALB"
+    protocol          = "TCP"
+    port              = var.grpc_backend_port
     security_group_id = yandex_vpc_security_group.alb.id
   }
 

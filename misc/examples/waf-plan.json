@@ -1,0 +1,108 @@
+{
+  "schema_version": "wafcheck-plan/v1",
+  "target": "https://app.example.test",
+  "defaults": {
+    "headers": {
+      "Accept": "application/json"
+    },
+    "timeout": "10s",
+    "block_statuses": [403],
+    "captcha_statuses": [429],
+    "origin_header": "X-Origin-Response",
+    "origin_header_value": "application",
+    "max_response_bytes": 65536
+  },
+  "cases": [
+    {
+      "name": "baseline-query",
+      "category": "baseline",
+      "method": "GET",
+      "path": "/search",
+      "query": {
+        "value": "ordinary text"
+      },
+      "expect": {
+        "decision": "allow",
+        "statuses": [200],
+        "require_headers": {
+          "X-Origin-Response": "application"
+        }
+      }
+    },
+    {
+      "name": "xss-query",
+      "category": "xss",
+      "method": "GET",
+      "path": "/search",
+      "query": {
+        "value": "<script>alert('wafcheck')</script>"
+      },
+      "expect": {
+        "decision": "block",
+        "statuses": [403],
+        "absent_headers": ["X-Origin-Response"]
+      }
+    },
+    {
+      "name": "sqli-form",
+      "category": "sqli",
+      "method": "POST",
+      "path": "/login",
+      "body": {
+        "form": {
+          "username": "admin' OR 1=1 -- wafcheck",
+          "password": "wafcheck"
+        }
+      },
+      "expect": {
+        "decision": "block",
+        "statuses": [403]
+      }
+    },
+    {
+      "name": "xss-json",
+      "category": "xss",
+      "method": "POST",
+      "path": "/api/check",
+      "body": {
+        "json": {
+          "comment": "<img src=x onerror=alert('wafcheck')>"
+        }
+      },
+      "expect": {
+        "decision": "block",
+        "statuses": [403]
+      }
+    },
+    {
+      "name": "scanner-header",
+      "category": "scanner",
+      "method": "GET",
+      "path": "/",
+      "headers": {
+        "User-Agent": "sqlmap/wafcheck"
+      },
+      "expect": {
+        "decision": "block",
+        "statuses": [403]
+      }
+    },
+    {
+      "name": "body-over-limit",
+      "category": "body-size",
+      "method": "POST",
+      "path": "/upload",
+      "body": {
+        "generated": {
+          "bytes": 1048577,
+          "pattern": "A",
+          "content_type": "application/octet-stream"
+        }
+      },
+      "expect": {
+        "decision": "block",
+        "statuses": [403]
+      }
+    }
+  ]
+}

@@ -17,6 +17,7 @@ sws_lab_install_path: /usr/local/bin/sws-lab
 sws_lab_config_dir: /etc/sws-lab
 sws_lab_environment_file: /etc/sws-lab/sws-lab.env
 sws_lab_listen_address: ":80"
+sws_lab_grpc_listen_address: ":9090"
 sws_lab_app_name: Yandex SWS Test Lab
 sws_lab_max_body_bytes: 1048576
 sws_lab_max_delay_ms: 2000
